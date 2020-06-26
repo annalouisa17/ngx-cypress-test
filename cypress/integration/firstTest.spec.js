@@ -128,16 +128,38 @@ describe('Our first suite', () => {
 
     })
 
-    it('assert property', () => {
+    it.only('assert property', () => {
+
+        function selectDayFromCurrent(day) {
+            let date = new Date()
+            //returns current date
+            date.setDate(date.getDate() + day)
+            let futureDay = date.getDate()
+            let futureMonth = date.toLocaleString('default', {month: 'short'})
+            let dateAssert = futureMonth+' '+futureDay+', '+date.getFullYear()
+            cy.get('nb-calendar-navigation').invoke('attr', 'ng-reflect-date').then(dateAttribute => {
+                if(!dateAttribute.includes(futureMonth)) {
+                    cy.get('[data-name="chevron-right"]').click()
+                    selectDayFromCurrent(day)
+                } else {
+                    cy.get('nb-calendar-day-picker [class="day-cell ng-star-inserted"]').contains(futureDay).click()
+                }
+            })
+            return dateAssert
+        }
         cy.visit('/')
         cy.contains('Forms').click()
         cy.contains('Datepicker').click()
 
+        //working with date pickers
+   
+
         cy.contains('nb-card', 'Common Datepicker').find('input').then(input => {
             //wrap because input is a jquery element
             cy.wrap(input).click()
-            cy.get('nb-calendar-day-picker').contains('17').click()
-            cy.wrap(input).invoke('prop', 'value').should('contain', 'Jun 17, 2020')
+            let dateAssert = selectDayFromCurrent(300)            
+            //cy.get('nb-calendar-day-picker').contains('17').click()
+            cy.wrap(input).invoke('prop', 'value').should('contain', dateAssert)
         })
     })
 
@@ -214,7 +236,7 @@ describe('Our first suite', () => {
 
     })
 
-    it.only('Web tables', () => {
+    it('Web tables', () => {
         cy.visit('/')
         cy.contains('Tables & Data').click()
         cy.contains('Smart Table').click()
@@ -262,4 +284,6 @@ describe('Our first suite', () => {
         
 
     })
+
+
 })
