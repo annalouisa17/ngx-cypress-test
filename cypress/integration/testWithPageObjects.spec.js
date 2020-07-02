@@ -10,7 +10,7 @@ const runOn = (browser, fn) => {
 }
 
 const ignoreOn = (browser, fn) => {
-    if (!Cypress.isBrowser(broswer)){
+    if (!Cypress.isBrowser(browser)){
         fn()
     }
 }
@@ -31,7 +31,7 @@ describe('Test with Page Objects', () => {
         })
     })
     
-    it.only('should submit Inline and Basic form and select tomorrow date in the calendar', () => {
+    it('should submit Inline and Basic form and select tomorrow date in the calendar', () => {
         navigateTo.formLayoutsPage()
         onFormLayoutsPage.submitInLineFormWithNameAndEmail('Artem', 'test@test.com')
         onFormLayoutsPage.submitBasicFormWithEmailAndPassword('test@test.com', 'password')
